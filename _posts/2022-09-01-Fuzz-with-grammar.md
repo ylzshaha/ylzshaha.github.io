@@ -302,7 +302,7 @@ def expand_node_by_cost(self, node: DerivationTree,
 	<expr> -> <term>
 ```
 
-[closing the expansion](###closing the expansion)这一章所实现的fuzzer在扩展非终结符时，根据所有可选children的expasnsion cost决定哪个是[1]合适的children，如果有多个children的expansion cost一样且都符合要求，那么将从这些都符合要求的children组成的list中**随机**选择[2]一个children作为最终的扩展。而在这一部分将对标号为[2]的**随机的选择**进行改进：**不是随机选择，而是从符合要求的children list中选择一个能提高语法覆盖率的children作为最终的扩展。**
+[closing the expansion](#closing the expansion)这一章所实现的fuzzer在扩展非终结符时，根据所有可选children的expasnsion cost决定哪个是[1]合适的children，如果有多个children的expansion cost一样且都符合要求，那么将从这些都符合要求的children组成的list中**随机**选择[2]一个children作为最终的扩展。而在这一部分将对标号为[2]的**随机的选择**进行改进：**不是随机选择，而是从符合要求的children list中选择一个能提高语法覆盖率的children作为最终的扩展。**
 
 对于如何从符合要求的children list中选择一个能够提高语法覆盖率的children，文章给出了两种方法。
 
