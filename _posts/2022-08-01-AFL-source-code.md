@@ -1166,7 +1166,7 @@ if (use_splicing && splice_cycle++ < SPLICE_CYCLES &&
 
 
 
-### common_fuzz_stuffC
+### common_fuzz_stuff
 
 首先这个函数检查`post_handler`是否为空，如果为空那么下一步。如果不为空调用`post_handler()`，并传入`out_buf`(其中保存了变异数据)和`len`(testcase长度)，对test进行处理，**这一步确实很有用处如果需要自定义一些对于testcase的处理那么就可以使用这个接口。**而这个posthandler是可以通过动态链接库导入的。
 
