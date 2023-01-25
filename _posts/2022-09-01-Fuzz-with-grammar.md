@@ -1,5 +1,5 @@
 ---
-title: Fuzz with grammar
+title: Fuzz with Grammar
 date: 2022-09-01 14:50:00 +0800
 catagories: [Fuzzing]
 tags: [Fuzzing]

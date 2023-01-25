@@ -1,5 +1,5 @@
 ---
-title: "Vuzzer: Application-aware Evolutionary reading note"
+title: "Vuzzer: Application-aware Evolutionary Reading Note"
 date: 2022-10-28 14:50:00 +0800
 catagories: [Fuzzing]
 tags: [Fuzzing]

@@ -1,5 +1,5 @@
 ---
-title: Introduce to ignition, simplified_lowering and deoptimization
+title: Introduce to Ignition, Simplified_lowering and Deoptimization
 date: 2022-07-05 14:50:00 +0800
 catagories: [V8]
 tags: [V8]

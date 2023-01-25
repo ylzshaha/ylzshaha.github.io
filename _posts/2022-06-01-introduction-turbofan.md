@@ -1,5 +1,5 @@
 ---
-title: Introduction to turbofan
+title: Introduction to Turbofan
 date: 2022-06-01 14:50:00 +0800
 catagories: [V8]
 tags: [V8]
