@@ -8,7 +8,8 @@ mermaid: true
 img_path: /assets/image/Chromium_security_models.assets/
 ---
 
-After learning about V8 exploitation, I became to be interested in the security of Chromium. After a period of thinking, I decided to start by learning about the security models of Chromium and then continue to learn how to exploit Chromium vulnerabilities. Therefore, this article is an introduction to Chromium security models which I have learned recently. 
+After learning about V8 exploitation, I became to be interested in the security of Chromium. After a period of thinking, I decided to start by learning about the security models of Chromium and then continued to learn how to exploit Chromium vulnerabilities. Therefore, this article is an introduction to Chromium security models which I had learned recently. 
+
 Welcome to contact me if you find some mistakes in this article!:-)  
 
 ## Site Isolation
