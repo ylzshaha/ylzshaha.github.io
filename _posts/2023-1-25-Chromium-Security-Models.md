@@ -276,7 +276,7 @@ There are two kinds of hook mechanism respectively for different interception.
 
 Let's look at how these two kinds of interceptions in more detail.
 
-#### Cold Interception
+##### Cold Interception
 
 Hot interception heavily relies on cold interception so it must be set first.
 
@@ -412,7 +412,7 @@ NTSTATUS ServiceResolverThunk::PerformPatch(void* local_thunk,
 }
 ```
 
-#### Hot Interception
+##### Hot Interception
 
 Hot interception is  performed by target process instead of the broker. The broker process is only responsible for gathering the information which is needed during patching. The information is actually `DllPatchInfo` mentioned above. `InitializeInterceptions()` will call the `TransferVariable()` to copy all  `DllPatchInfo`  from the broker to the target process memory.
 
@@ -551,7 +551,7 @@ The process A is just like a **fork-server** which is used in AFL to accelerate 
 
 Because the target processes are forked from the zygote and the namespace of processes can be inherited, the Layer-1 sandbox of the target process is based on the that of the zygote.
 
-### Layer-1
+#### Layer-1
 
 This [article](https://blog.quarkslab.com/digging-into-linux-namespaces-part-1.html) has a detailed introduction to namespace.
 
@@ -566,7 +566,7 @@ Layer-1 of the target process is mainly formed by pid_namespace, user_namespace,
 
  Let's look at how these things are implemented in more detail.
 
-#### Implementation Detail
+##### Implementation Detail
 
 Zygote will enter Layer-1 first and its logics are in `EnterLayerOneSandbox()`.
 
@@ -589,7 +589,7 @@ As we can see from the above picture, two renderer processes ohave its own pid_n
 
 In this way, the Target process enters its own Layer-1 sandbox.  
 
-### [Layer-2](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/linux/sandboxing.md#the-sandbox-1)
+#### [Layer-2](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/linux/sandboxing.md#the-sandbox-1)
 
 The Layer-2 sandbox of the Target process is mainly about seccomp-bpf which is a security feature provided by the Linux kernel. And its main responsibility is to filter syscalls and reject dangerous syscalls. For more details about seccomp-bpf, I recommend two materials:
 
@@ -630,9 +630,9 @@ The above code is the policy of the renderer process which is derived from the b
 Then, the C++ filtering policy will be translated into bpf code by `AssembleFilter()`. This bpf code will be sent to the Linux kernel and there will be a VM in the kernel which is responsible for interpreting the bpf code and filtering all syscalls invoked by this target process.
 The Layer-2 sandbox is designed to reduce the possibility of the kernel being attacked by the code executed in userland. For example, if some attackers get the ability of executing arbitrary shellcode in the renderer by exploiting some vulnerabilities in it, the Layer-2 sandbox can effectively prevent attackers from invoking syscalls to damage the kernel.
 
-### Access to System Resources
+#### Access to System Resources
 
-With these two kinds of sandbox, the target process will be isolated strictly and can hardly access system resources. However, sometimes, a target process indeed needs to access some sensitive system resources which are outside the sandbox on Linux. To use a common example of this practice, sometimes, a target process may need to open a file but open() syscall is forbidden according to the baseline bpf policies.
+With these two kinds of sandbox, the target process will be isolated strictly and can hardly access system resources. However, sometimes, a target process indeed needs to access some sensitive system resources which are outside the sandbox on Linux. For example, sometimes, a target process may need to open a file but open() syscall is forbidden according to the baseline bpf policies.
 
 ```c++
 ResultExpr EvaluateSyscallImpl(int fs_denied_errno,
