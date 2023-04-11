@@ -278,7 +278,7 @@ class CONTENT_EXPORT RenderFrameHost : public IPC::Listener,
 The above code is the constructor and a method named `FilterInstalledApps()` of the implementation of this receiver. In its constructor, we can see that this receiver holds a raw pointer of the RFH. Just like we talked about above, so there will be a UAF.
 And the `FilterInstalledApps()` will invoke a virtual function of the RFH named `GetProcess()`. Therefore, if we can use this UAF to control the memory of free RFH objects, we can hijack the virtual table to get an RCE opportunity.
 
-## Plaid Ctf 2020 Mojo
+## Plaid CTF 2020 Mojo
 
 chromium version: 81.0.4044.92
 
