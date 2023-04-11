@@ -18,7 +18,7 @@ To understand this article, readers need to have the basic knowledge of mojo and
 
 ### What is the RenderFrameHost
 
-#### communication between different frames
+#### Communication between Different Frames
 
 In order to protect the sensitive information of users and enhance the stability of the browser, chromium has maintained its [multi-process model](https://chromium.googlesource.com/chromium/src/+/main/docs/process_model_and_site_isolation.md) for a long time. And its current process model is named "Site Isolation". Under the policy of Site Isolation, the browser will create a renderer process for each site instead of each tab. In other words, frames opened from different sites in the same tab will be rendered in their respective renderer. 
 
@@ -140,7 +140,7 @@ In conclusion, When a renderer process needs to transfer a mojo receiver endpoin
 
 Now, we can understand that the construction of the mojo connection relies on the RFH. 
 
-### possible vulnerabilities
+### Possible Vulnerabilities
 
 Then let us talk about what kind of vulnerabilities will relate to the RFH and mojo. 
 Besides being used during the communications between different frames, Mojo connections are also helpers for the renderer process to access some sensitive resources which are restricted by the sandbox. In this case, a remote endpoint(renderer) will send requests to the receiver endpoint(browser) and the implementation of this interface may do some syscalls to access the system resources and then return the results to the renderer. 
@@ -278,7 +278,7 @@ class CONTENT_EXPORT RenderFrameHost : public IPC::Listener,
 The above code is the constructor and a method named `FilterInstalledApps()` of the implementation of this receiver. In its constructor, we can see that this receiver holds a raw pointer of the RFH. Just like we talked about above, so there will be a UAF.
 And the `FilterInstalledApps()` will invoke a virtual function of the RFH named `GetProcess()`. Therefore, if we can use this UAF to control the memory of free RFH objects, we can hijack the virtual table to get an RCE opportunity.
 
-## plaid ctf 2020 mojo
+## Plaid Ctf 2020 Mojo
 
 chromium version: 81.0.4044.92
 
@@ -806,11 +806,11 @@ The following picture shows the final memory layout of the fake RFH：
 
 ![image-20230410150922528](/image-20230410150922528.png)
 
-### conclusion
+### Conclusion
 
-During writing this article, I also watched several talks about chromium exploitation. I gradually found that to write a good exploitation, researchers must have a profound understanding of the **specific** target software. Besides, sometimes an awesome exploitation will need some genius and impressive imagination, especially for some large targets. This will cost a large amount of time and I prefer to learn some 
+During writing this article, I also watched several talks about chromium exploitation. I gradually found that to write a good exploitation, researchers must have a profound understanding of the **specific** target software. Besides, sometimes an awesome exploitation will need some genius and impressive imagination, especially for some large targets. This will cost a large amount of time. 
 
-After having a basic understanding of chromium, I think it is time to continue to learn about fuzzing and static analysis.
+After a period of thinking , I think that I'm more interested in vulnerabilities detection and exploitation mitigation. Therefore, after having a basic understanding of chromium security, I will try to read more papers to learn more knowledge about these fields.
 
 ### Exp
 
