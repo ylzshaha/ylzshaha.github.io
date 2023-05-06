@@ -1,0 +1,12 @@
+(module
+    (global $tmp (import "env" "global") (mut i64))
+    (func (export "get_global") (result i64)
+        (global.get $tmp)
+    )
+    (func (export "set_global") (param $p1 i64)
+        (local.get $p1)
+        (i64.const 0)
+        (i64.add)
+        (global.set $tmp)
+    )
+)
