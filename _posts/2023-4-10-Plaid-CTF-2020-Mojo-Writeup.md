@@ -1,6 +1,6 @@
 ---
 title: Plaid CTF 2020 Mojo
-date: 2023-4-10 17:00:00 +0800
+date: 2024-4-10 17:00:00 +0800
 catagories: [Chromium]
 tags: [Chromium]
 math: true
@@ -45,7 +45,7 @@ The following sentences are the descriptions from the chromium document:
 
 > Each renderer process has one or more `RenderFrame` objects, which correspond to frames with documents containing content. The corresponding `RenderFrameHost` in the browser process manages state associated with that document. Each `RenderFrame` is given a routing ID that is used to differentiate multiple documents or frames in the same renderer. These IDs are unique inside one renderer but not within the browser, so identifying a frame requires both a `RenderProcessHost` and a routing ID. Communication from the browser to a specific document in the renderer is done through these `RenderFrameHost` objects, which know how to send messages through Mojo or legacy IPC.
 
-We this effort a frame can find other frames in the same Browsing Context Group just like the following:
+With this kind of design, frame can find other frames in the same Browsing Context Group just like the following:
 
 ![image](/Cross Process Tabs (for posting).png)
 
@@ -133,7 +133,7 @@ my_frame->GetBrowserInterfaceBroker().GetInterface(std::move(receiver));
 
 In conclusion, When a renderer process needs to transfer a mojo receiver endpoint to the browser: 
 
-- it will get `RenderFrame` of the frame first. 
+- It will get `RenderFrame` of the frame first. 
 - There is also a renderer side `BrowserInterfaceBroker` instance in the `RenderFrame`. Get it. 
 - Then the renderer will invoke the member function named `GetInterface()` of the `BrowserInterfaceBroker` to transfer the receiver endpoint. 
 - In the browser side, the endpoint will be received by `BrowserInterfaceBrokerImpl` and a binder is invoked by RFH to bind the receiver.
@@ -144,7 +144,7 @@ Now, we can understand that the construction of the mojo connection relies on th
 
 Then let us talk about what kind of vulnerabilities will relate to the RFH and mojo. 
 Besides being used during the communications between different frames, Mojo connections are also helpers for the renderer process to access some sensitive resources which are restricted by the sandbox. In this case, a remote endpoint(renderer) will send requests to the receiver endpoint(browser) and the implementation of this interface may do some syscalls to access the system resources and then return the results to the renderer. 
-However, sometimes there are situations that an implementation may require to access the outer RFH object, like accessing the RFH’s `WebContentsImpl` object, accessing its `RenderFrameProcess` object, and so on.
+Moreover, there are situations where an implementation may require to access the outer RFH object, like accessing the RFH’s `WebContentsImpl` object, accessing its `RenderFrameProcess` object, and so on.
 One way to achieve this target is to directly hold a raw pointer of RFH. Just like the following code:
 
 ```c++
@@ -161,7 +161,7 @@ SensorProviderProxyImpl::SensorProviderProxyImpl(
 
 The class [`SensorProviderProxyImpl`](https://source.chromium.org/chromium/chromium/src/+/master:content/browser/generic_sensor/sensor_provider_proxy_impl.cc;l=38;drc=8f5b7ee843864f30c9483a8c64afa0433e2e9b90) represents the receiver implementation of a mojo interface named `SensorProvider` and this is its constructor. As we can see in line [1], it directly stores a raw pointer of RFH in instances of this class. 
 
-However, this will pose a problem: **Can we guarantee that the receivers of this mojo interface will never outlive the RFH?** If we can, then there will not occur any vulnerabilities but if we can not guarantee and if the raw pointer does not be cleaned promptly after the release, it is undoubted that there will be a UAF.
+However, this will pose a problem: **Can we guarantee that the receivers of this mojo interface will never outlive the RFH?** If we can, then there will not occur any vulnerabilities but if we can not guarantee and if the raw pointer does not be cleaned promptly after free, it is undoubted that there will be a UAF.
 
 And the answer can be found in the following code:
 
@@ -180,7 +180,7 @@ void RenderFrameHostImpl::GetSensorProvider(
 
 The above function is the binder of the `SensorProvider` which is responsible for creating an instance of `SensorProviderProxyImpl` and then binding it on the receiver endpoint and finally, storing it in RFH(at [2]). And we can see from the code that the RFH will hold the `unique_ptr` of `SensorProviderProxyImpl`. It means that when the RFH is destroyed the `SensorProviderProxyImpl` will also be destroyed automatically. They will have the same lifespan.
 
-But it will not always be this situation. In some cases, the receiver side of the mojo interface will be wrapped in a **self-owned receiver** with the function [`Mojo::MakeSelfOwnedReceiver`](https://source.chromium.org/chromium/chromium/src/+/master:mojo/public/cpp/bindings/self_owned_receiver.h;l=22;drc=9db96f40a036ecfdf6ef4498f622cda70a548126). 
+But it will not always be the same case. In some cases, the receiver side of the mojo interface will be wrapped in a **self-owned receiver** with the function [`Mojo::MakeSelfOwnedReceiver`](https://source.chromium.org/chromium/chromium/src/+/master:mojo/public/cpp/bindings/self_owned_receiver.h;l=22;drc=9db96f40a036ecfdf6ef4498f622cda70a548126). 
 
 > A **self-owned receiver** exists as a standalone object which owns its interface implementation and automatically cleans itself up when its bound interface endpoint detects an error. 
 
@@ -406,7 +406,7 @@ Please pay attention to the `call` instruction in the red rectangular. It will a
 
   ![image-20230328155941877](/image-20230328155941877.png)
 
-I am always wondering how did they discover this call instruction.
+I am always wondering how did they discover this call instruction of operator new.
 
 After discovering this `call` instruction, we can get the address of the `PlaidStoreImpl` object from its return value, thereby getting the address of `PlaidStoreImpl`'s data member. 
 

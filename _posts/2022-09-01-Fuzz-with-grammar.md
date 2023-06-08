@@ -1,6 +1,6 @@
 ---
 title: Fuzz with Grammar
-date: 2022-09-01 14:50:00 +0800
+date: 2023-09-01 14:50:00 +0800
 catagories: [Fuzzing]
 tags: [Fuzzing]
 math: true

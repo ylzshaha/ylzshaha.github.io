@@ -1,6 +1,6 @@
 ---
 title: "Vuzzer: Application-aware Evolutionary Reading Note"
-date: 2022-10-28 14:50:00 +0800
+date: 2023-10-28 14:50:00 +0800
 catagories: [Fuzzing]
 tags: [Fuzzing]
 math: true
@@ -34,7 +34,7 @@ All the pitfalls are related to complex code structures. Therefore, paper use a 
 ![image-20221021105810895](/image-20221021105810895.png)
 
 - Magic bytes(line 11)
-- Deeper execution(line 15): **<u>It's very similar with the Magic bytes. The difference is that offsets of the compared data is unfixed.</u>** It will spend a long time for AFL to guess the right offset and combination of the bytes. Thus the majority of the test case will fall into the "else" branch. This means that AFL will prefer exploring the "else" branch rather than the "if" branch(because it indeed finds new path in "else" branch) and this will make it hard for AFL to find the bug in the "if" branch.
+- Deeper execution(line 15): It will spend a long time for AFL to guess the right offset and combination of the bytes. Thus the majority of the test case will fall into the "else" branch. This means that AFL will prefer exploring the "else" branch rather than the "if" branch(because it indeed finds new path in "else" branch) and this will make it hard for AFL to find the bug in the "if" branch.
 - Markers(line 17): A comparison of entire string instead of separated char. It's very hard for AFL to generate such consecutive bytes to take right branch. There is a more detailed [explanation](https://moyix.blogspot.com/2016/07/fuzzing-with-afl-is-an-art.html). 
 - nested conditions(line 17): For AFL, every path has the same importance while some path are more difficult to reach than others. It means that the majority of test cases produced by AFL will be used to explore the easy paths while only a little test cases can reach the hard paths. In terms of nested conditions, this makes that the bugs in deep branches are hard to be detected. It is obvious that the balance strategy should be adjusted. **<u>AFL should prioritize efforts to the deep paths based on the collected control flow information.</u>**
 

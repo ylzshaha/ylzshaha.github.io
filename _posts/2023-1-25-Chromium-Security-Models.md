@@ -1,6 +1,6 @@
 ---
 title: Chromium Security Models
-date: 2023-1-25 15:32:00 +0800
+date: 2024-1-25 15:32:00 +0800
 catagories: [Chromium]
 tags: [Chromium]
 math: true

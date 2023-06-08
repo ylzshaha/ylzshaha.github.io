@@ -1,6 +1,6 @@
 ---
 title: AFL Source Code Reading Notes
-date: 2022-08-01 14:50:00 +0800
+date: 2023-08-01 14:50:00 +0800
 catagories: [AFL]
 tags: [AFL, Fuzzing]
 math: true

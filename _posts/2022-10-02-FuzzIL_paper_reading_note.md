@@ -1,6 +1,6 @@
 ---
 title: Introduction to FuzzIL
-date: 2022-10-02 14:50:00 +0800
+date: 2023-10-02 14:50:00 +0800
 catagories: [Fuzzing]
 tags: [Fuzzing]
 math: true
